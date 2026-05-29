@@ -207,6 +207,10 @@ def calc_sowing_score(
     req = CROP_REQUIREMENTS[crop_key]
     zone_elev = ZONE_ELEVATIONS.get(zone_key, 1500)
 
+    # Outside the agronomic sowing window → blank cell in frontend
+    if sow_month not in req["sowing_months"]:
+        return {"score": None}
+
     if zone_elev > req["elevation_max"]:
         return {"score": 0, "temp_score": 0, "rain_score": 0, "price_score": 0, "harvest_month": 0, "unsuitable_elevation": True}
 
@@ -245,7 +249,8 @@ def calc_sowing_score(
     crop_monthly = price_monthly_avg.get(crop_key, {})
     price_score = float(crop_monthly.get(str(harvest_month), 50) or 50)
 
-    score = temp_score * 0.4 + rain_score * 0.2 + price_score * 0.4
+    # Weights: market price 60%, temperature fit 25%, rainfall 15%
+    score = temp_score * 0.25 + rain_score * 0.15 + price_score * 0.60
 
     return {
         "score": round(score, 1),

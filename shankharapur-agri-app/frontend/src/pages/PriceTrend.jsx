@@ -8,6 +8,13 @@ import { useData } from '../DataContext'
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 const CURRENT_MONTH = new Date().getMonth() + 1
 
+const SELL_SCORE_LEVELS = [
+  { min: 70, color: '#16a34a', label: '70–100', desc: 'Good time to sell — price high & stable' },
+  { min: 50, color: '#65a30d', label: '50–69', desc: 'Above average' },
+  { min: 35, color: '#ca8a04', label: '35–49', desc: 'Below average' },
+  { min: 0,  color: '#dc2626', label: '0–34',  desc: 'Low price or high volatility — avoid' },
+]
+
 const PERIOD_OPTIONS = [
   { label: '1 yr', years: 1 },
   { label: '3 yr', years: 3 },
@@ -182,7 +189,13 @@ export default function PriceTrend() {
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-        <h2 className="text-sm font-semibold text-gray-700 mb-3">Sell Score by Month</h2>
+        <div className="mb-3">
+          <h2 className="text-sm font-semibold text-gray-700">Sell Score by Month</h2>
+          <p className="text-xs text-gray-400 mt-0.5">
+            Multi-year average · higher = better price &amp; more stable
+          </p>
+        </div>
+
         <div className="grid grid-cols-12 gap-1">
           {MONTHS.map((m, i) => {
             const score = Number(pricesData.monthly_avg?.[crop]?.[String(i + 1)] ?? 50)
@@ -199,6 +212,25 @@ export default function PriceTrend() {
               </div>
             )
           })}
+        </div>
+
+        {/* Legend */}
+        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3">
+          {SELL_SCORE_LEVELS.map(l => (
+            <span key={l.label} className="flex items-center gap-1.5 text-xs text-gray-500">
+              <span className="inline-block w-3 h-3 rounded-sm flex-shrink-0" style={{ background: l.color }} />
+              <span className="font-medium text-gray-700">{l.label}</span>
+              <span>{l.desc}</span>
+            </span>
+          ))}
+        </div>
+
+        {/* Formula */}
+        <div className="mt-3 bg-gray-50 rounded-lg px-3 py-2 text-xs text-gray-500 leading-relaxed">
+          <span className="font-medium text-gray-600">How it's calculated: </span>
+          Score = (month avg price ÷ annual avg price) × 100 × (1 − price volatility × 0.5)
+          <br />
+          A score above 70 means prices are high <em>and</em> consistent in that month — a reliable time to sell.
         </div>
       </div>
     </div>

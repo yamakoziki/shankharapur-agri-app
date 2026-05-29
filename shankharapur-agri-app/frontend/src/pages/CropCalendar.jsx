@@ -106,11 +106,29 @@ export default function CropCalendar() {
       <TopFiveCurrent zone={zone} cropScoresData={cropScoresData} cropMetaData={cropMetaData} />
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto">
-        <div className="p-3 border-b border-gray-100">
-          <h2 className="text-sm font-semibold text-gray-700">
-            Sowing Score Heatmap — <span className="text-green-700">{zone.charAt(0).toUpperCase() + zone.slice(1)}</span>
-          </h2>
-          <p className="text-xs text-gray-400 mt-0.5">Score = temp fit (40%) + rainfall (20%) + harvest price (40%) · tap a cell for details</p>
+        <div className="p-3 border-b border-gray-100 space-y-2">
+          <div>
+            <h2 className="text-sm font-semibold text-gray-700">
+              Sowing Score Heatmap — <span className="text-green-700">{zone.charAt(0).toUpperCase() + zone.slice(1)}</span>
+            </h2>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Each number is the <strong>sowing score for that month</strong> — how suitable it is to
+              plant that crop if you sow in that calendar month.
+              Tap any cell for a breakdown.
+            </p>
+          </div>
+          <div className="bg-blue-50 border border-blue-100 rounded-lg px-3 py-2 text-xs text-blue-800 leading-relaxed">
+            <p className="font-semibold mb-1">How the score is calculated (0–100)</p>
+            <ul className="space-y-0.5 list-none">
+              <li><span className="font-medium text-blue-900">60% — Harvest-month price</span>: the historical Sell Score of the month when the crop would be ready to harvest (sow month + growing days). Higher = better market price at harvest time.</li>
+              <li><span className="font-medium">25% — Temperature fit</span>: how close the growing-season temperature is to the crop's optimum. Drops to 0 if temperature goes outside the crop's min/max range.</li>
+              <li><span className="font-medium">15% — Rainfall</span>: total precipitation during the growing period vs the crop's seasonal requirement. A 20 % penalty applies if rainfall exceeds 150 % of the requirement (waterlogging risk).</li>
+            </ul>
+            <p className="mt-1.5 text-blue-600">
+              Blank cells = outside the agronomic sowing window for this crop in Shankharapur.
+              Harvest month = sow month + growing days ÷ 30.
+            </p>
+          </div>
         </div>
         <div className="p-2">
           <table className="w-full text-xs">
@@ -133,19 +151,27 @@ export default function CropCalendar() {
                   <td className="py-0.5 px-1 font-medium text-gray-700 sticky left-0 bg-white whitespace-nowrap">{crop}</td>
                   {Array.from({ length: 12 }, (_, i) => i + 1).map(mo => {
                     const entry = cropScoresData?.[zone]?.[crop]?.[mo]
-                    const score = entry?.score ?? 0
+                    const isBlank = entry?.score == null
+                    const score = isBlank ? 0 : entry.score
                     const c = scoreColor(score)
                     const isCurrent = mo === CURRENT_MONTH
                     return (
                       <td key={mo} className="py-0.5 px-0.5">
-                        <button
-                          title={`${crop} · Sow ${MONTHS[mo - 1]} · Score ${Math.round(score)}`}
-                          onClick={() => setModal({ crop, month: mo, zone })}
-                          className={`w-full rounded text-center py-0.5 cursor-pointer transition-opacity hover:opacity-80 ${c.bg} ${c.text} ${isCurrent ? 'ring-2 ring-green-600 ring-offset-1' : ''}`}
-                          style={{ minWidth: 20 }}
-                        >
-                          {Math.round(score)}
-                        </button>
+                        {isBlank ? (
+                          <div
+                            className={`w-full rounded py-0.5 ${isCurrent ? 'bg-gray-200' : 'bg-gray-100'}`}
+                            style={{ minWidth: 20, height: 20 }}
+                          />
+                        ) : (
+                          <button
+                            title={`${crop} · Sow ${MONTHS[mo - 1]} · Score ${Math.round(score)}`}
+                            onClick={() => setModal({ crop, month: mo, zone })}
+                            className={`w-full rounded text-center py-0.5 cursor-pointer transition-opacity hover:opacity-80 ${c.bg} ${c.text} ${isCurrent ? 'ring-2 ring-green-600 ring-offset-1' : ''}`}
+                            style={{ minWidth: 20 }}
+                          >
+                            {Math.round(score)}
+                          </button>
+                        )}
                       </td>
                     )
                   })}
@@ -168,6 +194,10 @@ export default function CropCalendar() {
               {l.label}
             </span>
           ))}
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-3 h-3 rounded bg-gray-200 border border-gray-300" />
+            Not sowing season
+          </span>
         </div>
       </div>
 
