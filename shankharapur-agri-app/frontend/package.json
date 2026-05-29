@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://paddlealute.github.io/shankharapur-agri-app",
+  "homepage": "https://yamakoziki.github.io/shankharapur-agri-app",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
