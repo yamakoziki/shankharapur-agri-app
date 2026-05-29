@@ -1,0 +1,19 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Node
+shankharapur-agri-app/frontend/node_modules/
+shankharapur-agri-app/frontend/dist/
+shankharapur-agri-app/frontend/dist-ssr/
+
+# macOS
+.DS_Store
+
+# Editor
+.idea/
+*.suo
+*.sw?
