@@ -151,18 +151,18 @@ High score = high price AND low price volatility that month.
 
 ### sowing_score (0–100) — in `04_crop_calendar.py`
 ```
-score = temp_suitability×0.4 + rain_suitability×0.2 + harvest_month_sell_score×0.4
+score = price_score×0.60 + temp_score×0.25 + rain_score×0.15
 ```
-- Temperature suitability: 0–100 based on deviation from `temp_opt`, clamped to 0 if outside `[temp_min, temp_max]`
-- Rainfall suitability: `min(100, total_rain / rain_mm_season × 100)`, with 20% penalty if >150% of requirement
-- Harvest month = `(sow_month - 1 + growing_days // 30) % 12 + 1`
+- Price score (60%): harvest-month sell_score from `monthly_avg` in `prices_monthly.json`; harvest month = `(sow_month - 1 + growing_days // 30) % 12 + 1`
+- Temperature score (25%): 0–100 based on deviation from `temp_opt`, averaged over growing period, clamped to 0 if any month falls outside `[temp_min, temp_max]`
+- Rainfall score (15%): `min(100, total_rain / rain_mm_season × 100)`, with 20% penalty if >150% of requirement
 - If zone elevation exceeds `elevation_max`, score is 0 with `unsuitable_elevation: true`
 
 ### Elevation lapse rate — in `03_fetch_weather.py`
 Open-Meteo returns data at its API grid elevation. Applied correction: `−0.65°C per 100m` difference between API elevation and zone target elevation.
 
 ### Commodity name normalization — in `02_process_prices.py`
-`COMMODITY_MAP` maps ~80 raw Kalimati commodity strings to 25 canonical crop names (after `str.strip().lower()`). Only mapped commodities are kept. `04_crop_calendar.py` has `CROP_REQUIREMENTS` for 18 of those crops.
+`COMMODITY_MAP` maps ~80 raw Kalimati commodity strings to 20 canonical crop names (after `str.strip().lower()`). Only mapped commodities are kept. `04_crop_calendar.py` has `CROP_REQUIREMENTS` for all 20 of those crops.
 
 ---
 
@@ -172,6 +172,10 @@ Open-Meteo returns data at its API grid elevation. Applied correction: `−0.65�
 - Zone keys (`lowland`, `mid`, `highland`) are always lowercase throughout the codebase.
 - `CURRENT_MONTH = new Date().getMonth() + 1` (1-indexed) is used in all three pages to highlight the current month.
 - Mobile layout uses a fixed bottom nav; desktop uses a top tab bar. Both are in `App.jsx`.
+- `useData()` returns `{ prices, weatherZones, forecast, cropScores, cropMeta }` — use these exact destructuring keys in page components.
+- Charts use **Recharts**: `LineChart` in `PriceTrend.jsx`, `ComposedChart` (Bar + Line) in `WeatherDashboard.jsx`.
+- Tailwind CSS v4 is configured via the `@tailwindcss/vite` Vite plugin — there is no `tailwind.config.js`.
+- `WeatherDashboard` shows all three zones simultaneously (no zone selector); `CropCalendar` and `PriceTrend` have per-page zone/crop selectors.
 
 ---
 
