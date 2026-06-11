@@ -88,6 +88,10 @@ python3 -m venv venv && source venv/bin/activate
 pip install pandas requests python-dotenv
 ```
 
+### External data sources (used by the pipeline)
+- **Kalimati prices** (`01_download_data.py`): `ErKiran/kalimati` GitHub repo — a bundled historical CSV plus per-day CSVs under `data/csv/YYYY/MM/DD.csv`, discovered via the GitHub Trees API. Failures here are usually GitHub API rate limits or repo path changes.
+- **Weather** (`03_fetch_weather.py`): Open-Meteo `archive-api` (last 5 years of daily history) for `weather_zones.json`, and Open-Meteo `forecast` API (14-day) for `forecast.json`.
+
 ---
 
 ## Data Flow Architecture
@@ -162,7 +166,7 @@ score = price_score×0.60 + temp_score×0.25 + rain_score×0.15
 Open-Meteo returns data at its API grid elevation. Applied correction: `−0.65°C per 100m` difference between API elevation and zone target elevation.
 
 ### Commodity name normalization — in `02_process_prices.py`
-`COMMODITY_MAP` maps ~80 raw Kalimati commodity strings to 20 canonical crop names (after `str.strip().lower()`). Only mapped commodities are kept. `04_crop_calendar.py` has `CROP_REQUIREMENTS` for all 20 of those crops.
+`COMMODITY_MAP` maps ~80 raw Kalimati commodity strings to canonical crop names (currently 21, after `str.strip().lower()`). Only mapped commodities are kept. `04_crop_calendar.py` has a `CROP_REQUIREMENTS` entry for every canonical crop, each including a Devanagari `name_np`. When adding a new crop, update both `COMMODITY_MAP` and `CROP_REQUIREMENTS` together, then re-run the pipeline.
 
 ---
 
