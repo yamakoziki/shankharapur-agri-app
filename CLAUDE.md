@@ -166,7 +166,7 @@ score = price_score×0.60 + temp_score×0.25 + rain_score×0.15
 Open-Meteo returns data at its API grid elevation. Applied correction: `−0.65°C per 100m` difference between API elevation and zone target elevation.
 
 ### Commodity name normalization — in `02_process_prices.py`
-`COMMODITY_MAP` maps ~80 raw Kalimati commodity strings to canonical crop names (currently 21, after `str.strip().lower()`). Only mapped commodities are kept. `04_crop_calendar.py` has a `CROP_REQUIREMENTS` entry for every canonical crop, each including a Devanagari `name_np`. When adding a new crop, update both `COMMODITY_MAP` and `CROP_REQUIREMENTS` together, then re-run the pipeline.
+`COMMODITY_MAP` maps ~70 raw Kalimati commodity strings to canonical crop names (currently 22, after `str.strip().lower()`). Only mapped commodities are kept. `04_crop_calendar.py` has a `CROP_REQUIREMENTS` entry for every canonical crop, each including a Devanagari `name_np`. When adding a new crop, update both `COMMODITY_MAP` and `CROP_REQUIREMENTS` together, then re-run the pipeline.
 
 ---
 
