@@ -108,6 +108,8 @@ COMMODITY_MAP = {
     # Broccoli
     "broccoli":                     "Broccoli",
     "brocauli":                     "Broccoli",
+    # Sweet Potato
+    "sweet potato":                 "Sweet Potato",
 }
 
 TARGET_CROPS = sorted(set(COMMODITY_MAP.values()))

@@ -180,6 +180,14 @@ CROP_REQUIREMENTS = {
         "elevation_max": 2500,
         "sowing_months": [8, 9, 10],
     },
+    "Sweet Potato": {
+        "name_np": "सखरखण्ड",
+        "temp_min": 15, "temp_opt": 24, "temp_max": 35,
+        "rain_mm_season": 500,
+        "growing_days": 120,
+        "elevation_max": 2000,
+        "sowing_months": [3, 4, 5],
+    },
 }
 
 ZONE_ELEVATIONS = {
