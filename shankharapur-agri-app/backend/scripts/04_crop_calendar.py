@@ -172,6 +172,14 @@ CROP_REQUIREMENTS = {
         "elevation_max": 2500,
         "sowing_months": [10, 11],
     },
+    "Broccoli": {
+        "name_np": "ब्रोकाउली",
+        "temp_min": 5, "temp_opt": 15, "temp_max": 24,
+        "rain_mm_season": 350,
+        "growing_days": 70,
+        "elevation_max": 2500,
+        "sowing_months": [8, 9, 10],
+    },
 }
 
 ZONE_ELEVATIONS = {

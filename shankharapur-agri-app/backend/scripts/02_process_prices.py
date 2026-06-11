@@ -105,6 +105,9 @@ COMMODITY_MAP = {
     "garlic (dry)":                 "Garlic",
     "garlic dry nepali":            "Garlic",
     "garlic dry chinese":           "Garlic",
+    # Broccoli
+    "broccoli":                     "Broccoli",
+    "brocauli":                     "Broccoli",
 }
 
 TARGET_CROPS = sorted(set(COMMODITY_MAP.values()))
